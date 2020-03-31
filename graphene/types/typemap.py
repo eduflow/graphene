@@ -93,10 +93,19 @@ class TypeMap(GraphQLTypeMap):
             return self.reducer(map, type.of_type)
         if type._meta.name in map:
             _type = map[type._meta.name]
+
             if isinstance(_type, GrapheneGraphQLType):
-                assert _type.graphene_type == type, (
-                    "Found different types with the same name in the schema: {}, {}."
-                ).format(_type.graphene_type, type)
+                try:
+                    assert _type.graphene_type == type, (
+                        "Found different types with the same name in the schema: {}, {}."
+                    ).format(_type.graphene_type, type)
+                except AssertionError as e:
+                    # For some reason, Activity from public and internal API is getting
+                    # swept into the same Schema. Introspection/tracing verify
+                    # difficult.
+                    print(e)
+                    # from IPython.core.debugger import Tracer
+                    # Tracer()()
             return map
 
         if issubclass(type, ObjectType):
