@@ -11,6 +11,8 @@ matrix:
       python: 3.7
       dist: xenial
       sudo: true
+    - env: TOXENV=pypy
+      python: pypy-5.7.1
     - env: TOXENV=pre-commit
       python: 3.6
     - env: TOXENV=mypy
